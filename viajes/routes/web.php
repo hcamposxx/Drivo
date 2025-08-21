@@ -22,4 +22,4 @@ Route::get('/', function () {
 
 Route::post('searchTrip',[TripController::class,'searchTrip'])->name('searchTrip');
 //mantener info aunque actulice pagina
-Route::get('search/{from}/{to}/{date}/{sort}/{verified}',[TripController::class,'search']);
+Route::get('search/{from}/{to}/{date}/{seats}/{sort}/{verified}',[TripController::class,'search']);

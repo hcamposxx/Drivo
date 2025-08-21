@@ -34,7 +34,7 @@
             <p class="control has-icons-left">
 
                 
-                <span class="icon"><i class="fas fa-user"></i></span>
+                <span class="icon"><i class="fas fa-chair"></i></span>
                 <input class="input is-success" type="number" name="asientos" id="asientos"  min="1" max="4" value="1">
 
             </p>

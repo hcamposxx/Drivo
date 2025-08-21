@@ -1,6 +1,8 @@
 <div class="card px-2 py-2 columns is-mobile is-centered">
     <form method="post" action="{{ route('searchTrip') }}" class="field is-grouped">
         @csrf
+        <input type="hidden" name="verified" value="-1">
+        <input type="hidden" name="sort" value="departure_time">
         <div class="control">
 
             <span class="icon"><i class="fas fa-location"></i></span>
@@ -31,7 +33,7 @@
             <p class="control has-icons-left">
 
                 
-                <span class="icon"><i class="fas fa-user"></i></span>
+                <span class="icon"><i class="fas fa-chair"></i></span>
                 <input required class="input is-success" type="number" name="asientos" id="asientos"  min="1" max="4" value="1">
 
             </p>
