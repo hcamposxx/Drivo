@@ -29,6 +29,7 @@ class CityController extends Controller
 
     public function getDestinations($id){
         $cityRoutes = CityRoute::where('origin_city_id', $id)->get();
+        //En caso de error
         if($cityRoutes->isEmpty()){
             return response()->json(['message'=>'No existen rutas desde la ciudad de origen'],404);
         }
