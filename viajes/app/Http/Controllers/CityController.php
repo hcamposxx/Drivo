@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\CityRoute;
+use Exception;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -45,6 +46,28 @@ class CityController extends Controller
         });
 
         return response()->json(array("results" => $destinationCities));
+    }
+
+     public function getDestinationsAjax($name){
+        try{
+
+            $cityFrom = City::where('name', $name)->first();
+            $cityRoutes = CityRoute::where('origin_city_id', $cityFrom->id)->get();
+            //En caso de error
+            if($cityRoutes->isEmpty()){
+                return response()->json(['message'=>'No existen rutas desde la ciudad de origen'],404);
+            }
+
+            $destinationCities = $cityRoutes->map(function($cityRoute){
+                return $cityRoute->destinationCity->name;
+            });
+
+            return response()->json(array("results" => $destinationCities));
+
+        }catch(Exception $ex){
+            return [];
+
+        }
     }
 
     /**

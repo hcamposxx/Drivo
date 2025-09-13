@@ -12,8 +12,17 @@ class TripController extends Controller
     public function searchTrip(Request $request)
     {
         if($request->input('origen') && $request->input('destino') && $request->input('fecha') && $request->input('asientos')){
-            $origen = City::where('id', $request->input('origen'))->first();
-            $destino = City::where('id', $request->input('destino'))->first();
+            if($request->has('form2')){
+
+                $origen = City::where('name', $request->input('origen'))->first();
+                $destino = City::where('name', $request->input('destino'))->first();
+
+            }else{
+
+                $origen = City::where('id', $request->input('origen'))->first();
+                $destino = City::where('id', $request->input('destino'))->first();
+
+            }
             
             if($origen && $destino){
                 return redirect("/search/{$origen->id}/{$destino->id}/{$request->input('fecha')}/{$request->input('asientos')}/{$request->input('sort')}/{$request->input('verified')}");

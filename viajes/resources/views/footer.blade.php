@@ -61,5 +61,37 @@
     });
 
 </script>
+@if ($errors->any())
+<script>
+    Swal.fire({
+        position:'center-center',
+        title: '{{ $errors->first() }}',
+        icon: 'error',
+        showConfirmButton: true,
+        timer: 4500
+    })
+</script>
+
+@endif
+
+@if (session('mensaje'))
+<script>
+    Swal.fire({
+        position:'center-center',
+        title: "{{ session('mensaje')}}",
+        icon: 'success',
+        showConfirmButton: true,
+        timer: 2500
+    })
+</script>
+
+@endif
+    <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+    <script>
+        //inicializar micromodal
+        document.addEventListener('DOMContentLoaded',function(){
+            MicroModal.init();
+        })        
+    </script>
 </body>
 </html>
