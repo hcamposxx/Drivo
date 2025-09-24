@@ -77,14 +77,14 @@
                         @else
                         <div class="content">
                             @foreach ($trips as $info)
-                                <div class="card my-2">
+                                <div class="card my-2" @if($info->available_seats == $info->occupied_seats ) style="background-color:#fff4d6" @endif>
                                     <!-- Tarjetas para cada viaje -->
                                     <div class="card-content">
                                         <div class="media">
                                         <div class="media-left">
                                             <figure class="image is-48x48">
                                             <img
-                                                src="https://bulma.io/assets/images/placeholders/96x96.png"
+                                                src="{{ optional($info->driver)->photo ? $info->driver->photo : asset('img/auto.png')}}"
                                                 alt="Placeholder image"
                                             />
                                             </figure>
@@ -173,7 +173,11 @@
                                             </p>
                                         </div>                                        
                                             <footer class="card-footer">
-                                                <button data-micromodal-trigger="modal-details" style="border-radius: 50px" class="js-modal-trigger button is-success is-fullwidth is-medium modal-button">Detalles del viaje</button>
+                                                @if(($info->available_seats - $info->occupied_seats) > 0) 
+                                                <button onclick="showDetails('{{ $info->id }}','{{ $info->departure_date }}',' {{ substr($info->departure_time,0,5) }} -> {{ substr($horaLlegada->format('H:i:s').PHP_EOL,0,5) }} ({{ intval(substr($info->trip_duration,0,2)).'h '.intval(substr($info->trip_duration,3,2)).'m' }})','{{ $info->available_seats - $info->occupied_seats }}','{{ $info->occupied_seats? $info->occupied_seats:0}}','{{ $info->pets_allowed?'SI':'NO' }}','{{ $info->smoking_allowed?'SI':'NO' }}','{{ $info->pickup_point }}','{{ $info->dropoff_point }}','{{ $info->details }}','{{ optional($info->driver)->photo ? $info->driver->photo : asset('img/auto.png')}}')" data-micromodal-trigger="modal-details" style="border-radius: 50px" class="js-modal-trigger button is-success is-fullwidth is-medium modal-button">Detalles del viaje</button>
+                                                @else
+                                                <button disabled style="border-radius: 50px" class="js-modal-trigger button is-light is-fullwidth is-medium modal-button">No hay asientos disponibles</button>
+                                                @endif
                                             </footer>
                                     </div>
                                 </div>

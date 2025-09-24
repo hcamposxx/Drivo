@@ -91,7 +91,76 @@
         //inicializar micromodal
         document.addEventListener('DOMContentLoaded',function(){
             MicroModal.init();
-        })        
+        });
+        
+        function showDetails(id_trip, fecha, hora, disponibles, ocupados, mascotas, fumar, salida, llegada, detalle, foto){
+            $('#modal_id_trip').val(id_trip);
+            $('#txt_date').text(fecha);
+            $('#txt_time').text(hora);
+            $('#txt_availables').text(disponibles);
+            $('#modal_seats').attr('max',disponibles);
+            $('#txt_occupied').text(ocupados);
+            $('#txt_pets').text(mascotas);
+            $('#txt_smoking').text(fumar);
+            $('#txt_pickup').text(salida);
+            $('#txt_dropoff').text(llegada);
+            $('#txt_details').text(detalle);
+            $('#img_driver').attr('src',foto);
+        }
+
+        function sendReservation() {
+            let token = $('meta[name="csrf-token"]').attr('content');
+
+            $.ajax({
+                url:`{{ route('save-reservation') }}`,
+                type:'POST',
+                dataType:'json',
+                data:{
+                    '_token': token,
+                    'trip_id':$('#modal_id_trip').val(),
+                    'phone':$('#modal_phone').val(),
+                    'comment':$('#modal_comment').val(),
+                    'seats':$('#modal_seats').val(),
+                    'trip_id':$('#modal_id_trip').val(),
+                    'passenger_id':'{{ optional(Auth::user())->id }}',
+                },
+                 success:function(res){
+                    if(res.error){
+                        Swal.fire({
+                            position:'center-center',
+                            title: res.message,
+                            icon: 'error',
+                            showConfirmButton: true,
+                            timer: 3500
+                            });
+                    }else{
+                        Swal.fire({
+                            position:'center-center',
+                            title: res.message,
+                            icon: 'success',
+                            showConfirmButton: true,
+                            timer: 3500
+                            }).then((result)=>{
+                                if(result.isConfirmed || result.dismiss == Swal.DismissReason.timer){
+                                    location.reload();
+                                }
+                            });
+                    }
+                },
+                error:function(err){
+                    Swal.fire({
+                            position:'center-center',
+                            title: "Upps",
+                            icon: 'error',
+                            showConfirmButton: true,
+                            timer: 3500
+                            });
+                            console.log(err);
+
+                }
+            })
+
+        }
     </script>
 </body>
 </html>

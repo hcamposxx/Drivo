@@ -15,7 +15,8 @@ class Reservation extends Model
         'seats',
         'confirmed',
         'active',
-        'phone'
+        'phone',
+        'comment'
     ];
 
     public function passenger(){
