@@ -11,7 +11,8 @@
         <div class="navbar-end">
             @auth
             <a href="{{ route('offer-seats')  }}" class="navbar-item"><span class="icon"><i class="fa-solid fa-plus"></i></span>Publicar un viaje</a>
-            <a href="{{ route('history') }}" class="navbar-item"><span class="icon"><i class="fas fa-user"></i></span>{{ Auth::user()->name }}</a>
+            <a href="{{ route('home') }}" class="navbar-item"><span class="icon"><i class="fas fa-user"></i></span>{{ Auth::user()->name }}</a>
+            <a href="{{ route('history') }}" class="navbar-item"><span class="icon"><i class="fas fa-car"></i></span>Mis viajes</a>
             <a style="color:red" href="{{ route('logout') }}" class="navbar-item"><span class="icon"><i class="fas fa-lock"></i></span>Cerrar sesión</a>
 
             @else

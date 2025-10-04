@@ -108,9 +108,9 @@ Route::get('offer-seats', function () {
     return view('new-trip');
 })->name('offer-seats');
 
-Route::get('history', function () {
-    return view('new-trip');
-})->name('history');
+
+Route::get('history',[TripController::class,'history'])->name('history');
+Route::get('history/{id}',[TripController::class,'passengers']);
 
 Route::get('logout', function () {
     Auth::logout();
