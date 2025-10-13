@@ -13,6 +13,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.22.5/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="{{ asset('css/micromodal.css') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}"/>
+    <style>
+        html {
+            height: 100%;
+            background-image: url("{{ asset('img/citylights.jpg') }}");
+            background-size: cover;           /* cubre toda la ventana y el scroll */
+            background-attachment: fixed;     /* queda fijo al hacer scroll */
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        body {
+            min-height: 100%;
+            margin: 0;
+            background: transparent;          /* importante para que el fondo del html se vea */
+        }
+    </style>
 </head>
 <body>
     @include('menu')
