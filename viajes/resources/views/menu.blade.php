@@ -3,7 +3,7 @@
     <div class="navbar-brand">
      
         <a href="{{ route('home') }}" class="navbar-item">
-            <img style="height:70px;max-height:70px;" src="{{ asset('img/logo.svg') }}" alt="Logo" class="py-2 px-2">
+            <img style="height:70px;max-height:70px; transform: scale(4.4);" src="{{ asset('img/Drivo.png') }}" alt="Logo" class="py-2 px-6">
         </a>
     </div>
 

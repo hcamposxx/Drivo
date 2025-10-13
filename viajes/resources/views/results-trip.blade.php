@@ -181,6 +181,7 @@
                                             </footer>
                                     </div>
                                 </div>
+                                
                             @endforeach
                         </div>
                         @endif
@@ -191,6 +192,8 @@
 
 
 @include('trip-details')
+
+
 
 
 <!-- Script de autocompletado de nombres de ciudades -->

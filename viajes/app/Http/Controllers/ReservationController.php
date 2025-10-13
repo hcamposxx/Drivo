@@ -7,6 +7,7 @@ use App\Models\Trip;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
@@ -46,6 +47,18 @@ class ReservationController extends Controller
                             'confirmed'=> $trip->automatic_reservation ? 1:0
 
                         ]);
+
+                        //aqui se agregan lineas de codigo para enviar correo
+                         try{
+                            Mail::to([$passenger->email, $trip->driver->email])->send(new NewReservationEmail($passenger->name,  $request->get('trip_id'), 'Nueva reserva',  $request->get('seats')));
+                            
+
+                        }catch(Exception $ex){
+                            dd($ex);
+
+                        }
+
+
                         return response()->json(["error"=>false,'message'=> $trip->automatic_reservation ? 'Reserva confirmada con '.$request->get('seats').' asientos':'Debe esperar la confirmación del conductor']);
 
                     }else{

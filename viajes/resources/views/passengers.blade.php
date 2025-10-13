@@ -17,8 +17,8 @@
                     <span class="message-body columns is-mobile is-centered">
                         @if ($totalTrips== 0)
                         <div class="content">
-                        <h2>Aún no hay viajes</h2>
-                        <p>Publica tu primer viaje o busca un asiento</p>
+                        <h2>Aún no hay pasajeros</h2>
+                        <p> </p>
                         </div>
                         @else
                         <div class="content">

@@ -14,6 +14,9 @@ class TripController extends Controller
 {
     public function searchTrip(Request $request)
     {
+        if (!Auth::check()) {
+        return redirect()->route('login')->withErrors('Debes iniciar sesión para buscar viajes.');
+        }
         if($request->input('origen') && $request->input('destino') && $request->input('fecha') && $request->input('asientos')){
             if($request->has('form2')){
 
@@ -205,5 +208,25 @@ class TripController extends Controller
 
         return view('passengers', compact('trip','date','from','to'));
 
+    }
+
+    public function cancelTrip(Request $request){
+        $idTrip = $request->input("id");
+        Trip::where('id',$idTrip)
+        ->update([
+            'active' => 0
+        ]);
+
+        $reservations = Reservation::where('trip_id', $idTrip)->with('passenger')->get();
+
+        $emails = $reservations->pluck('passenger.email')->toArray();
+
+        Reservation::where('trip_id', $idTrip)->delete();
+        return response()->json([
+            'error' => false,
+            'message' => "Viaje cancelado con éxito",
+            'icon' => "success",
+            
+    ],200);
     }
 }

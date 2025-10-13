@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\TripController;
+use App\Mail\NewTripEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -33,6 +35,22 @@ Route::get('register', function () {
     return view('register');
 })->name('register');
 
+
+Route::get('/verify/{id}', function ($id) {
+    try {
+        $affected = User::where('id', $id)->update(['verified' => true]);
+        if($affected > 0){
+            return redirect(route('home'))->with('mensaje', 'Correo verificado');
+        }else{
+            return redirect(route('home'))->withErrors('mensaje', 'No se logró verificar el correo');
+
+        }
+    } catch (Exception $ex) {
+        return redirect(route('home'))->withErrors('mensaje', 'No se logró verificar el correo, intente nuevamente');
+    }
+});
+
+
 Route::get('login-google', function () {
     return Socialite::driver('google')->redirect();
 })->name('login-google');
@@ -59,6 +77,14 @@ Route::get('google-callback', function () {
             'external_auth' => 'google'
 
         ]);
+        try{
+            Mail::to($user->email)->send(new NewTripEmail($user->name, $exists->id, 'Confirma tu E-mail'));
+            
+
+        }catch(Exception $ex){
+            dd($ex);
+
+        }
     }
 
     Auth::login($exists);
