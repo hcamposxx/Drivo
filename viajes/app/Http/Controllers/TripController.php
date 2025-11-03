@@ -229,4 +229,19 @@ class TripController extends Controller
             
     ],200);
     }
+
+//alerta de 5 minutos antes
+    public function checkUpcomingTrips() {
+    $userId = auth()->id();
+    $now = now();
+    $inFive = now()->addMinutes(5);
+
+    $trips = Trip::where('user_id', $userId)
+                ->orWhereHas('passengers', fn($q) => $q->where('user_id', $userId))
+                ->whereBetween('start_time', [$now, $inFive])
+                ->get(['id','start_time']);
+
+   
+    }
+
 }

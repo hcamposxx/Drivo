@@ -48,15 +48,7 @@ class ReservationController extends Controller
 
                         ]);
 
-                        //aqui se agregan lineas de codigo para enviar correo
-                         try{
-                            Mail::to([$passenger->email, $trip->driver->email])->send(new NewReservationEmail($passenger->name,  $request->get('trip_id'), 'Nueva reserva',  $request->get('seats')));
-                            
-
-                        }catch(Exception $ex){
-                            dd($ex);
-
-                        }
+                        
 
 
                         return response()->json(["error"=>false,'message'=> $trip->automatic_reservation ? 'Reserva confirmada con '.$request->get('seats').' asientos':'Debe esperar la confirmación del conductor']);
