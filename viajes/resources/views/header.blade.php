@@ -14,6 +14,36 @@
     <link rel="stylesheet" href="{{ asset('css/micromodal.css') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}"/>
     <style>
+        /* ===== Franja dorada con texto desplazándose ===== */
+.scroll-banner {
+    background: linear-gradient(90deg, #d4af37, #ffdf00, #d4af37);
+
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 8px 0;
+    font-weight: 600;
+    font-size: 1rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    border-bottom: 2px solid #a97f00;
+}
+
+.scroll-text {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-left 25s linear infinite;
+}
+
+/* Animación para desplazar el texto */
+@keyframes scroll-left {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
         html {
             height: 100%;
             background-image: url("{{ asset('img/citylights.jpg') }}");
@@ -28,6 +58,32 @@
             margin: 0;
             background: transparent;          /* importante para que el fondo del html se vea */
         }
+                    /* ===== Botón Volver Arriba ===== */
+            #btn-scroll-top {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background-color: #e0b908ff; /* Fucsia, puedes cambiarlo a dorado si prefieres */
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+                display: none; /* Oculto al inicio */
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                z-index: 9999;
+            }
+
+            #btn-scroll-top:hover {
+                background-color: #ff66b2; /* tono más claro al pasar el mouse */
+                transform: translateY(-3px);
+            }
+
     </style>
 </head>
 <body>

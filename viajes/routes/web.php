@@ -142,3 +142,20 @@ Route::get('logout', function () {
     Auth::logout();
     return redirect(route('home'));
 })->name('logout');
+
+Route::get('/reglas', function () {
+    return view('reglas');
+})->name('reglas');
+
+Route::get('/preguntas', function () {
+    return view('preguntas');
+})->name('preguntas');
+
+Route::get('/ayuda', function () {
+    return view('ayuda');
+})->name('ayuda');
+
+Route::get('/privacidad', function () {
+    return view('privacidad');
+})->name('privacidad');
+
