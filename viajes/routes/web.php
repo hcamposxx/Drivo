@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\Admin\CityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -158,4 +161,25 @@ Route::get('/ayuda', function () {
 Route::get('/privacidad', function () {
     return view('privacidad');
 })->name('privacidad');
+
+Route::middleware(['auth', IsAdmin::class])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/trips', [AdminController::class, 'trips'])->name('admin.trips');
+
+    Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteuser');
+    Route::delete('/trips/{id}', [AdminController::class, 'deleteTrip'])->name('admin.deletetrip');
+
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    
+    // Rutas para ciudades
+    Route::get('/cities', [CityController::class, 'index'])->name('cities.index');
+    Route::get('/cities/create', [CityController::class, 'create'])->name('cities.create');
+    Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
+    Route::get('/cities/{id}/edit', [CityController::class, 'edit'])->name('cities.edit');
+    Route::put('/cities/{id}', [CityController::class, 'update'])->name('cities.update');
+    Route::delete('/cities/{id}', [CityController::class, 'destroy'])->name('cities.destroy');
+});
 
