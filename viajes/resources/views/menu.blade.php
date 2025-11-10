@@ -21,15 +21,12 @@
                 <a id="logout-btn" style="color:red" href="{{ route('logout') }}" class="navbar-item">
                     <span class="icon"><i class="fas fa-lock"></i></span> Cerrar sesión
                 </a>
-<<<<<<< HEAD
 
             {{-- Enlace al panel de administrador (solo para admins) --}}
             @if(Auth::user()->is_admin)
             <a href="{{ route('admin.dashboard') }}" class="navbar-item"><span class="icon"><i class="fas fa-user-shield"></i></span>Panel Admin</a>
             @endif
             
-=======
->>>>>>> c669b09750a8566dd305a727d2c9587f19985563
             @else
                 <a href="{{ route('login') }}" class="navbar-item">
                     <span class="icon"><i class="fa-solid fa-plus"></i></span> Publicar un viaje

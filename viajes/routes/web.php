@@ -162,6 +162,7 @@ Route::get('/privacidad', function () {
     return view('privacidad');
 })->name('privacidad');
 
+//rutas del admin en dashboard
 Route::middleware(['auth', IsAdmin::class])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
