@@ -162,7 +162,6 @@ Route::get('/privacidad', function () {
     return view('privacidad');
 })->name('privacidad');
 
-<<<<<<< HEAD
 Route::middleware(['auth', IsAdmin::class])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
@@ -184,5 +183,3 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/cities/{id}', [CityController::class, 'destroy'])->name('cities.destroy');
 });
 
-=======
->>>>>>> c669b09750a8566dd305a727d2c9587f19985563

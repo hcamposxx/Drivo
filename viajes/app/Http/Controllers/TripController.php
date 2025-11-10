@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class TripController extends Controller
 {
+    //el error de los viajes puede estar aqui revisar
     public function searchTrip(Request $request)
     {
         if (!Auth::check()) {
