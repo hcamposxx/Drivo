@@ -12,6 +12,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\CityRouteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -182,5 +183,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/cities/{id}/edit', [CityController::class, 'edit'])->name('cities.edit');
     Route::put('/cities/{id}', [CityController::class, 'update'])->name('cities.update');
     Route::delete('/cities/{id}', [CityController::class, 'destroy'])->name('cities.destroy');
+
+    Route::get('/city-routes', [CityRouteController::class, 'index'])->name('city-routes.index');
+    Route::get('/city-routes/{city}/edit', [CityRouteController::class, 'edit'])->name('city-routes.edit');
+    Route::put('/city-routes/{city}', [CityRouteController::class, 'update'])->name('city-routes.update');
+    Route::delete('/city-routes/{route}', [CityRouteController::class, 'destroy'])->name('city-routes.destroy');
 });
 

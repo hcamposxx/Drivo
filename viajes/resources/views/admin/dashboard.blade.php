@@ -69,7 +69,11 @@
                      <a href="{{ route('admin.cities.index') }}" class="button is_secondary">
                      <span class="icon"><i class="fas fa-city"></i></span>
                      <span>Gestionar Ciudades</span>
-                        </a>
+                    </a>
+                    <a href="{{ route('admin.city-routes.index') }}" class="button is-warning">
+                        <span class="icon"><i class="fas fa-route"></i></span>
+                        <span>Gestionar Rutas</span>
+                    </a>
                 </div>
             </div>
             {{-- Viajes recientes --}}
