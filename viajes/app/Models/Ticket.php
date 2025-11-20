@@ -12,6 +12,7 @@ class Ticket extends Model
         'user_id',
         'subject',
         'description',
+        'image',
         'priority',
         'status',
         'admin_response',
