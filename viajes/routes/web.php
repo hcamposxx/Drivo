@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CityRouteController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,6 +139,13 @@ Route::get('offer-seats', function () {
     return view('new-trip');
 })->name('offer-seats');
 
+//rutas para los perfiles
+Route::middleware(['auth'])->group(function () {
+    Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    Route::get('profile/edit', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+});
 
 Route::get('history',[TripController::class,'history'])->name('history');
 Route::get('history/{id}',[TripController::class,'passengers']);
@@ -188,5 +196,23 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/city-routes/{city}/edit', [CityRouteController::class, 'edit'])->name('city-routes.edit');
     Route::put('/city-routes/{city}', [CityRouteController::class, 'update'])->name('city-routes.update');
     Route::delete('/city-routes/{route}', [CityRouteController::class, 'destroy'])->name('city-routes.destroy');
+});
+
+//rutas de los tickets
+    Route::middleware(['auth'])->group(function () {
+    // Ver mis tickets
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    // Crear ticket
+    Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
+    // Ver detalle de un ticket
+    Route::get('/tickets/{id}', [TicketController::class, 'show'])->name('tickets.show');
+});
+
+// Rutas para administradores
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    // Ver todos los tickets
+    Route::get('/tickets', [TicketController::class, 'adminIndex'])->name('admin.tickets.index');
+    // Responder/actualizar ticket
+    Route::put('/tickets/{id}', [TicketController::class, 'adminUpdate'])->name('admin.tickets.update');
 });
 

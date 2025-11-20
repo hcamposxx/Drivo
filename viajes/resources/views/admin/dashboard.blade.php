@@ -52,6 +52,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="column">
+    <div class="box has-background-warning-light">
+        <div class="level">
+            <div class="level-left">
+                <div>
+                    <p class="heading">Tickets Abiertos</p>
+                    <p class="title">{{ \App\Models\Ticket::whereIn('status', ['abierto', 'en_proceso'])->count() }}</p>
+                </div>
+            </div>
+            <div class="level-right">
+                <span class="icon is-large has-text-warning">
+                    <i class="fas fa-ticket-alt fa-2x"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
             
             {{-- Acciones rápidas --}}
@@ -73,6 +90,10 @@
                     <a href="{{ route('admin.city-routes.index') }}" class="button is-warning">
                         <span class="icon"><i class="fas fa-route"></i></span>
                         <span>Gestionar Rutas</span>
+                    </a>
+                    <a href="{{ route('admin.tickets.index') }}" class="button is-danger">
+                        <span class="icon"><i class="fas fa-ticket-alt"></i></span>
+                        <span>Gestionar Tickets de Soporte</span>
                     </a>
                 </div>
             </div>

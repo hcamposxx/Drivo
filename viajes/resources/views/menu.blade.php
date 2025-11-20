@@ -2,7 +2,7 @@
 
     <div class="navbar-brand">
         <a href="{{ route('home') }}" class="navbar-item">
-            <img style="height:70px;max-height:70px; transform: scale(4.4);" src="{{ asset('img/Drivo.png') }}" alt="Logo" class="py-2 px-6">
+            <img style="height:70px;max-height:70px; transform: scale(2.2);" src="{{ asset('img/Drivo.png') }}" alt="Logo" class="py-2 px-6">
         </a>
     </div>
 
@@ -12,7 +12,7 @@
                 <a href="{{ route('offer-seats') }}" class="navbar-item">
                     <span class="icon"><i class="fa-solid fa-plus"></i></span> Publicar un viaje
                 </a>
-                <a href="{{ route('home') }}" class="navbar-item">
+                <a href="{{ route('profile.show') }}" class="navbar-item">
                     <span class="icon"><i class="fas fa-user"></i></span> {{ Auth::user()->name }}
                 </a>
                 <a href="{{ route('history') }}" class="navbar-item">

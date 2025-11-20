@@ -18,6 +18,8 @@
   <i class="fa fa-arrow-up"></i>
 </button>
 
+@include('components.ticket-button')
+
 <script>
   // Mostrar el botón cuando se baja un poco
   window.addEventListener("scroll", function() {

@@ -50,4 +50,16 @@ class User extends Authenticatable
     public function reservations(){
         return $this->hasMany(Reservation::class,'passenger_id');
     }
+
+//sistema de ticket todo lo que esta debajo de esto
+
+public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'user_id');
+    }
+
+public function admintickets()
+    {
+        return $this->hasMany(Ticket::class, 'admin_id');
+    }
 }
