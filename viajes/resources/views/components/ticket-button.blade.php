@@ -90,13 +90,13 @@
 
       </form>
     </section>
-    <footer class="modal-card-foot">
+    <footer class="modal-card-foot" style="gap: 12px; display: flex; justify-content: flex-start;">
       <button type="submit" form="ticketForm" class="button is-primary">
         <span class="icon"><i class="fas fa-paper-plane"></i></span>
         <span>Enviar Ticket</span>
       </button>
-      <button class="button" onclick="closeTicketModal()">Cancelar</button>
-      <a href="{{ route('tickets.index') }}" class="button is-ghost">
+      <button class="button" onclick="closeTicketModal()" style="margin-left: 12px;">Cancelar</button>
+      <a href="{{ route('tickets.index') }}" class="button is-ghost" style="margin-left: 12px;">
         <span class="icon"><i class="fas fa-history"></i></span>
         <span>Ver mis tickets</span>
       </a>

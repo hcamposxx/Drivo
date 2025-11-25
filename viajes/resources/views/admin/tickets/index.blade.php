@@ -9,13 +9,16 @@
     <style>
         /* Estilos adicionales para el modal desplazable */
         .modal-card-scrollable {
-            max-height: 85vh;
+            max-height: 90vh;
             display: flex;
             flex-direction: column;
         }
         .modal-card-body-scrollable {
             overflow-y: auto;
-            max-height: calc(85vh - 120px); /* Restamos la altura del header y footer */
+            max-height: calc(90vh - 160px); /* Restamos la altura del header y footer */
+        }
+        .modal-card-foot{
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -237,7 +240,6 @@
                                     <option value="abierto">🔴 Abierto</option>
                                     <option value="en_proceso">🟡 En Proceso</option>
                                     <option value="resuelto">🟢 Resuelto</option>
-                                    <option value="cerrado">⚫ Cerrado</option>
                                 </select>
                             </div>
                         </div>
