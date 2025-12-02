@@ -82,7 +82,7 @@
                                     <div class="media">
                                         <div class="media-left">
                                             <figure class="image is-48x48">
-                                                <img src="{{ optional($info->driver)->photo ? $info->driver->photo : asset('img/auto.png')}}" alt="Foto conductor"/>
+                                                <img src="{{ auth()->user()->photo ? asset(auth()->user()->photo) : asset('img/auto.png') }}" alt="Foto conductor"/>
                                             </figure>
                                         </div>
                                         <div class="media-content columns">

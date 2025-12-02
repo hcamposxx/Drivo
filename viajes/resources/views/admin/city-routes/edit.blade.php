@@ -3,10 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurar Rutas - {{ $city->name }}</title>
+    <title>Configurar Rutas - {{ $city->name }} - Admin Drivo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
+        }
+        
+        .content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        
         .city-checkbox-card {
             border: 2px solid #dbdbdb;
             border-radius: 6px;
@@ -17,11 +49,11 @@
             align-items: center;
         }
         .city-checkbox-card:hover {
-            border-color: #3273dc;
+            border-color: var(--primary);
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .city-checkbox-card.selected {
-            border-color: #48c774;
+            border-color: var(--success);
             background-color: #f0fdf4;
         }
         .city-checkbox-card input[type="checkbox"] {
@@ -33,6 +65,12 @@
             top: 20px;
             z-index: 10;
         }
+        
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -40,22 +78,22 @@
     
     <section class="section">
         <div class="container">
-            <div class="level">
-                <div class="level-left">
-                    <div class="level-item">
+            <!-- Encabezado mejorado -->
+            <div class="admin-header">
+                <div class="level">
+                    <div class="level-left">
                         <div>
-                            <h1 class="title">Configurar Rutas desde {{ $city->name }}</h1>
-                            <hr>
-                            <p class="subtitle">Selecciona las ciudades destino disponibles</p>
+                            <h1 class="title is-2 has-text-white">Configurar Rutas desde {{ $city->name }}</h1>
+                            <p class="subtitle has-text-white">Selecciona las ciudades destino disponibles</p>
                         </div>
                     </div>
-                </div>
-                <div class="level-right">
-                    <div class="level-item">
-                        <a href="{{ route('admin.city-routes.index') }}" class="button is-light">
-                            <span class="icon"><i class="fas fa-arrow-left"></i></span>
-                            <span>Volver</span>
-                        </a>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a href="{{ route('admin.city-routes.index') }}" class="button is-light">
+                                <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                <span>Volver a Rutas</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -66,7 +104,7 @@
 
                 <div class="columns">
                     <div class="column is-8">
-                        <div class="box">
+                        <div class="content-box">
                             <div class="level mb-4">
                                 <div class="level-left">
                                     <div class="level-item">
@@ -140,7 +178,7 @@
                     </div>
 
                     <div class="column is-4">
-                        <div class="box selected-count">
+                        <div class="content-box selected-count">
                             <h3 class="title is-5">
                                 <span class="icon has-text-success">
                                     <i class="fas fa-check-circle"></i>

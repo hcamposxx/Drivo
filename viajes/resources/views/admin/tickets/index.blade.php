@@ -7,7 +7,102 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilos adicionales para el modal desplazable */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
+        }
+        
+        .content-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .stats-box {
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .table-container {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+            color: #495057;
+            padding: 1rem 0.75rem;
+        }
+        
+        .table tbody td {
+            padding: 1rem 0.75rem;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .action-button {
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .empty-state {
+            padding: 3rem 1rem;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
         .modal-card-scrollable {
             max-height: 90vh;
             display: flex;
@@ -15,10 +110,16 @@
         }
         .modal-card-body-scrollable {
             overflow-y: auto;
-            max-height: calc(90vh - 160px); /* Restamos la altura del header y footer */
+            max-height: calc(90vh - 160px);
         }
         .modal-card-foot{
             flex-shrink: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -27,17 +128,33 @@
 
     <section class="section">
         <div class="container">
-            <h1 class="title">
-                <span class="icon-text">
-                    <span class="icon"><i class="fas fa-headset"></i></span>
-                    <span>Gestión de Tickets de Soporte</span>
-                </span>
-            </h1>
-            <h2 class="subtitle">Administra los reportes de los usuarios</h2>
+            <!-- Encabezado mejorado -->
+            <div class="admin-header">
+                <div class="level">
+                    <div class="level-left">
+                        <div>
+                            <h1 class="title is-2 has-text-white">
+                                <span class="icon-text">
+                                    <span class="icon"><i class="fas fa-headset"></i></span>
+                                    <span>Gestión de Tickets de Soporte</span>
+                                </span>
+                            </h1>
+                            <p class="subtitle has-text-white">Administra los reportes de los usuarios</p>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="tags has-addons">
+                            <span class="tag is-dark">Total</span>
+                            <span class="tag is-success">{{ $tickets->count() }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             @if(session('success'))
             <div class="notification is-success is-light">
                 <button class="delete"></button>
+                <span class="icon"><i class="fas fa-check-circle"></i></span>
                 {{ session('success') }}
             </div>
             @endif
@@ -45,38 +162,39 @@
             @if(session('error'))
             <div class="notification is-danger is-light">
                 <button class="delete"></button>
+                <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
                 {{ session('error') }}
             </div>
             @endif
 
             <div class="columns">
                 <div class="column">
-                    <div class="box has-text-centered">
+                    <div class="stats-box has-background-white">
                         <p class="heading">Total</p>
-                        <p class="title">{{ $tickets->count() }}</p>
+                        <p class="title has-text-dark">{{ $tickets->count() }}</p>
                     </div>
                 </div>
                 <div class="column">
-                    <div class="box has-text-centered has-background-danger-light">
+                    <div class="stats-box has-background-danger-light">
                         <p class="heading">Abiertos</p>
-                        <p class="title">{{ $tickets->where('status', 'abierto')->count() }}</p>
+                        <p class="title has-text-dark">{{ $tickets->where('status', 'abierto')->count() }}</p>
                     </div>
                 </div>
                 <div class="column">
-                    <div class="box has-text-centered has-background-warning-light">
+                    <div class="stats-box has-background-warning-light">
                         <p class="heading">En Proceso</p>
-                        <p class="title">{{ $tickets->where('status', 'en_proceso')->count() }}</p>
+                        <p class="title has-text-dark">{{ $tickets->where('status', 'en_proceso')->count() }}</p>
                     </div>
                 </div>
                 <div class="column">
-                    <div class="box has-text-centered has-background-success-light">
+                    <div class="stats-box has-background-success-light">
                         <p class="heading">Resueltos</p>
-                        <p class="title">{{ $tickets->where('status', 'resuelto')->count() }}</p>
+                        <p class="title has-text-dark">{{ $tickets->where('status', 'resuelto')->count() }}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="box">
+            <div class="content-box">
                 <div class="tabs">
                     <ul>
                         <li class="is-active"><a onclick="filterTickets('all', event)">Todos</a></li>
@@ -87,9 +205,32 @@
                 </div>
             </div>
 
-            <div class="box">
+            <div class="content-box">
+                <div class="level mb-4">
+                    <div class="level-left">
+                        <h2 class="title is-4 has-text-grey-dark">
+                            <span class="icon has-text-primary">
+                                <i class="fas fa-ticket-alt"></i>
+                            </span>
+                            <span>Lista de Tickets</span>
+                        </h2>
+                    </div>
+                    <div class="level-right">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Buscar tickets...">
+                            </div>
+                            <div class="control">
+                                <button class="button is-primary">
+                                    <span class="icon"><i class="fas fa-search"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-container">
-                    <table class="table is-fullwidth is-striped is-hoverable">
+                    <table class="table is-fullwidth is-hoverable">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -107,9 +248,9 @@
                                 <td><strong>#{{ $ticket->id }}</strong></td>
                                 <td>
                                     <div class="is-flex is-align-items-center">
-                                        <span class="icon mr-2">
-                                            <i class="fas fa-user-circle"></i>
-                                        </span>
+                                        <figure class="image is-32x32 mr-2">
+                                            <img class="is-rounded" src="https://ui-avatars.com/api/?name={{ urlencode($ticket->user->name) }}&background=random" alt="Avatar">
+                                        </figure>
                                         <div>
                                             <strong>{{ $ticket->user->name }}</strong><br>
                                             <small class="has-text-grey">{{ $ticket->user->email }}</small>
@@ -122,17 +263,17 @@
                                 </td>
                                 <td>
                                     @if($ticket->priority)
-                                    <span class="tag {{ $ticket->priorityBadge }}">
+                                    <span class="tag {{ $ticket->priorityBadge }} is-medium">
                                         {{ ucfirst($ticket->priority) }}
                                     </span>
                                     @else
-                                    <span class="tag is-light">
+                                    <span class="tag is-light is-medium">
                                         <i class="fas fa-exclamation-triangle"></i> Sin asignar
                                     </span>
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="tag {{ $ticket->statusBadge }}">
+                                    <span class="tag {{ $ticket->statusBadge }} is-medium">
                                         {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
                                     </span>
                                 </td>
@@ -140,7 +281,7 @@
                                     <small>{{ $ticket->created_at->format('d/m/Y H:i') }}</small>
                                 </td>
                                 <td>
-                                    <button class="button is-small is-info" 
+                                    <button class="button is-small is-info action-button" 
                                             onclick="openResponseModal(
                                                 {{ $ticket->id }}, 
                                                 '{{ addslashes($ticket->subject) }}', 
@@ -157,11 +298,14 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="has-text-centered py-5">
-                                    <span class="icon is-large has-text-grey-light">
-                                        <i class="fas fa-inbox fa-3x"></i>
-                                    </span>
-                                    <p class="mt-3">No hay tickets registrados</p>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <span class="icon">
+                                            <i class="fas fa-inbox"></i>
+                                        </span>
+                                        <p class="is-size-5">No hay tickets registrados</p>
+                                        <p class="has-text-grey">Los tickets aparecerán aquí una vez que los usuarios los creen</p>
+                                    </div>
                                 </td>
                             </tr>
                             @endforelse
@@ -283,7 +427,7 @@
 
     <script>
         function openResponseModal(ticketId, subject, description, status, priority, adminResponse, imageUrl) {
-            console.log('Opening modal with:', {ticketId, subject, status, priority, imageUrl}); // Debug
+            console.log('Opening modal with:', {ticketId, subject, status, priority, imageUrl});
             
             // Establecer título
             document.getElementById('modalTitle').textContent = `Ticket #${ticketId}: ${subject}`;
@@ -295,10 +439,10 @@
             const prioritySelect = document.getElementById('prioritySelect');
             if (priority && priority !== '') {
                 prioritySelect.value = priority;
-                console.log('Priority set to:', priority); // Debug
+                console.log('Priority set to:', priority);
             } else {
                 prioritySelect.value = '';
-                console.log('No priority assigned'); // Debug
+                console.log('No priority assigned');
             }
             
             // Establecer estado
