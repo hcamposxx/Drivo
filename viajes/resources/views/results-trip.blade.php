@@ -88,11 +88,11 @@
                                         <div class="media-content columns">
                                             <div class="column">
                                                 <p class="title is-4">{{ $info->driver->name }}</p>
-                                                <span>Calificación: </span>
+                                             <!--   <span>Calificación: </span>
                                                 <p class="subtitle is-6">
                                                     <span class="icon has-text-warning"><i class="fas fa-star"></i></span>
                                                     {{ $info->driver->rating }}                                                       
-                                                </p>
+                                                </p>-->
                                             </div>
                                             <div class="column">
                                                 <p class="subtitle is-6">

@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CityRouteController;
 use App\Http\Controllers\TicketController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -216,3 +217,24 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::put('/tickets/{id}', [TicketController::class, 'adminUpdate'])->name('admin.tickets.update');
 });
 
+
+
+use App\Models\Trip;
+
+Route::get('/checkout', function(Request $request) {
+
+    $trip = Trip::with(['departureCity','arrivalCity'])->find($request->trip_id);
+
+    return view('checkout', [
+        'trip' => $trip,
+        'seats' => $request->seats,
+        'phone' => $request->phone,
+        'comment' => $request->comment
+    ]);
+
+})->name('checkout');
+
+
+use App\Http\Controllers\ReservationController;
+
+Route::get('/reservation-pdf/{trip}/{user}', [ReservationController::class, 'pdf'])->name('reservation.pdf');

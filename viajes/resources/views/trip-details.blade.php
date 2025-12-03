@@ -99,8 +99,32 @@
 
       <footer class="modal__footer">
         <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Cerrar</button>
-        @auth
-        <button onclick="sendReservation()" class="modal__btn modal__btn-primary">Enviar solicitud</button>
+        @auth 
+          <button onclick="goToCheckout()" class="modal__btn modal__btn-primary">Continuar</button>
+
+          <script>
+            function goToCheckout() {
+
+                let trip_id  = document.getElementById("modal_id_trip").value;
+                let seats    = document.getElementById("modal_seats").value;
+                let phone    = document.getElementById("modal_phone").value;
+                let comment  = document.getElementById("modal_comment").value;
+
+                // Validación rápida
+                if (!seats || seats <= 0) {
+                    alert("Debes ingresar cantidad de asientos.");
+                    return;
+                }
+
+                // Redirección al checkout simulado
+                window.location.href = `/checkout?trip_id=${trip_id}&seats=${seats}&phone=${phone}&comment=${comment}`;
+            }
+            </script>
+
+
+  
+           
+         <!-- <button onclick="sendReservation()" class="modal__btn modal__btn-primary">Enviar solicitud</button> -->
         @else
         <a href="{{ route('login') }}" class="modal__btn modal__btn-primary">Enviar solicitud</a>
         @endauth
@@ -108,3 +132,6 @@
     </div>
   </div>
 </div>
+
+
+

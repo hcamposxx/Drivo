@@ -7,89 +7,86 @@ use App\Models\Trip;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf; // Importar DomPDF
 
 class ReservationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        try{
+        try {
             $passenger = User::find($request->get('passenger_id'));
 
-            if($passenger){
-                $idTrip = $request->get('trip_id');
-                $trip = Trip::with(['departureCity','arrivalCity','driver'])
-                ->find($idTrip);
+            if(!$passenger){
+                return response()->json(["error"=>true,'message'=>'Su sesión ha caducado, intente nuevamente']);
+            }
 
-                if($trip && $trip->active == 1){
-                    $occupiedSeats = Reservation::where('trip_id',$idTrip)->sum('seats');
+            $trip = Trip::with(['departureCity','arrivalCity','driver'])
+                        ->find($request->get('trip_id'));
 
-                    if(($trip->available_seats - $occupiedSeats) == 0){
-                        return response()->json(["error"=>true,'message'=>'Ya no hay asientos disponibles en este viaje']);
-                    }elseif (($trip->available_seats - $occupiedSeats) >= $request->get('seats')){
-                        Reservation::create([
-                            'trip_id'=> $request->get('trip_id'),
-                            'passenger_id'=> $request->get('passenger_id'),
-                            'seats'=> $request->get('seats'),
-                            'phone'=> $request->get('phone'),
-                            'comment'=> $request->get('comment'),
-                            'confirmed'=> $trip->automatic_reservation ? 1:0
+            if(!$trip || $trip->active != 1){
+                return response()->json(["error"=>true,'message'=>'El viaje ya no esta disponible']);
+            }
 
-                        ]);
+            $occupiedSeats = Reservation::where('trip_id',$trip->id)->sum('seats');
 
-                        
+            if(($trip->available_seats - $occupiedSeats) == 0){
+                return response()->json(["error"=>true,'message'=>'Ya no hay asientos disponibles en este viaje']);
+            }
 
+            if(($trip->available_seats - $occupiedSeats) < $request->get('seats')){
+                return response()->json(["error"=>true,'message'=>'Ahora solo quedan '.($trip->available_seats - $occupiedSeats).' asientos disponibles']);
+            }
 
-                        return response()->json(["error"=>false,'message'=> $trip->automatic_reservation ? 'Reserva confirmada con '.$request->get('seats').' asientos':'Debe esperar la confirmación del conductor']);
+            // Crear reserva
+            $reservation = Reservation::create([
+                'trip_id'=> $trip->id,
+                'passenger_id'=> $passenger->id,
+                'seats'=> $request->get('seats'),
+                'phone'=> $request->get('phone'),
+                'comment'=> $request->get('comment'),
+                'confirmed'=> $trip->automatic_reservation ? 1 : 0
+            ]);
 
-                    }else{
-                        return response()->json(["error"=>false,'message'=>'Ahora solo quedan '.$trip->available_seats - $occupiedSeats.' asientos disponibles']);
-                    }
-                }else{
-                    return response()->json(["error"=>true,'message'=>'El viaje ya no esta disponible']);
-                    }
-            }else{
-                    return response()->json(["error"=>true,'message'=>'Su sesión ha caducado, intente nuevamente']);
-                    }
+            return response()->json([
+                "error" => false,
+                "message" => $trip->automatic_reservation ? 
+                    'Reserva confirmada con '.$request->get('seats').' asientos' : 
+                    'Debe esperar la confirmación del conductor',
+                "reservation_id" => $reservation->id
+            ]);
 
-        }catch(Exception $ex){
+        } catch(Exception $ex) {
             return response()->json(["error"=>true,'message'=>'Intente nuevamente']);
-                    
-        } 
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Generar PDF de la reserva
      */
-    public function show(string $id)
+    public function generatePdf($id)
     {
-        //
+        $reservation = Reservation::with(['trip.departureCity','trip.arrivalCity','passenger'])->findOrFail($id);
+        $trip = $reservation->trip;
+        $seats = $reservation->seats;
+        $phone = $reservation->phone;
+
+        $pdf = Pdf::loadView('pdf', compact('reservation', 'trip', 'seats', 'phone'));
+
+        return $pdf->download('reserva_'.$reservation->id.'.pdf');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+
+
+    public function pdf($tripId, $userId)
     {
-        //
+        $trip = Trip::with(['departureCity','arrivalCity'])->findOrFail($tripId);
+        $reservation = Reservation::where('trip_id', $tripId)->where('passenger_id', $userId)->firstOrFail();
+        $seats = $reservation->seats;
+        $phone = $reservation->phone;
+        $comment = $reservation->comment;
+
+        $pdf = Pdf::loadView('pdf', compact('trip', 'reservation', 'seats', 'phone'));
+        return $pdf->download('reserva_'.$tripId.'.pdf');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

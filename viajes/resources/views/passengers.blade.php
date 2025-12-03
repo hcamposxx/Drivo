@@ -58,6 +58,7 @@
                                                         </span>
                                                         {{ $to }}
                                                     </p>
+                                                    <!-- verificacion
                                                     <p class="subtitle is-6 has-text-white">
                                                         @if (!empty($info['passenger']->dni_front) && !empty($info['passenger']->dni_back) && $info['passenger']->verified == 1)
                                                             <span class="icon">
@@ -70,7 +71,8 @@
                                                             </span>
                                                             <strong class="has-text-warning">Por verificar</strong>
                                                         @endif
-                                                    </p>
+                                                    </p> -->
+
                                                     <p class="subtitle is-6 has-text-white">
                                                         <span class="icon">
                                                             <i class="fas fa-comment"></i>
