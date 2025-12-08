@@ -21,6 +21,87 @@
 @include('components.ticket-button')
 
 <script>
+let currentTripId = null;
+
+function openMessageModal(tripId, driverName, fromCity, toCity) {
+  currentTripId = tripId;
+  document.getElementById('driverName').value = driverName;
+  document.getElementById('tripRoute').value = fromCity + ' → ' + toCity;
+  document.getElementById('messageText').value = '';
+  document.getElementById('messageModal').classList.add('is-active');
+}
+
+function closeMessageModal() {
+  document.getElementById('messageModal').classList.remove('is-active');
+  currentTripId = null;
+}
+
+function sendMessage() {
+  const message = document.getElementById('messageText').value.trim();
+  
+  if (!message) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Mensaje vacío',
+      text: 'Por favor escribe un mensaje',
+      timer: 2000
+    });
+    return;
+  }
+
+  let token = $('meta[name="csrf-token"]').attr('content');
+  
+  $.ajax({
+    url: "{{ route('sendMessage') }}",
+    type: "POST",
+    dataType: "json",
+    data: {
+      '_token': token,
+      'trip_id': currentTripId,
+      'message': message
+    },
+    success: function(response) {
+      if (response.error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: response.message,
+          timer: 3000
+        });
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Mensaje enviado!',
+          text: response.message,
+          timer: 2500
+        }).then(() => {
+          closeMessageModal();
+        });
+      }
+    },
+    error: function(err) {
+      console.error("Error:", err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo enviar el mensaje',
+        timer: 3000
+      });
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const modalBg = document.querySelector('#messageModal .modal-background');
+  if (modalBg) {
+    modalBg.addEventListener('click', closeMessageModal);
+  }
+});
+</script>
+
+
+
+<script>
   // Mostrar el botón cuando se baja un poco
   window.addEventListener("scroll", function() {
       const btn = document.getElementById("btn-scroll-top");
@@ -39,10 +120,43 @@
       });
   });
 
- 
+
 
 </script>
-
+<!-- Modal de Mensajes -->
+<div id="messageModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Enviar mensaje al conductor</p>
+      <button class="delete" aria-label="close" onclick="closeMessageModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="field">
+        <label class="label">Conductor</label>
+        <div class="control">
+          <input class="input" type="text" id="driverName" readonly>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Ruta</label>
+        <div class="control">
+          <input class="input" type="text" id="tripRoute" readonly>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Mensaje</label>
+        <div class="control">
+          <textarea class="textarea" id="messageText" placeholder="Escribe tu mensaje aquí..." rows="5"></textarea>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success" onclick="sendMessage()">Enviar mensaje</button>
+      <button class="button" onclick="closeMessageModal()">Cancelar</button>
+    </footer>
+  </div>
+</div>
 
 
 @include('footer-content')
@@ -94,6 +208,23 @@
 #btn-scroll-top:hover {
   background-color: #ff00eaff; /* Dorado más intenso */
   transform: scale(1.1);
+}
+
+.modal-card {
+  max-width: 500px;
+}
+
+.modal-card-head {
+  background-color: #ffd700;
+}
+
+.modal-card-title {
+  color: #000;
+  font-weight: 600;
+}
+
+.modal-card-foot {
+  justify-content: flex-end;
 }
 
 </style>

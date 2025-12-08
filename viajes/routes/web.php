@@ -238,3 +238,29 @@ Route::get('/checkout', function(Request $request) {
 use App\Http\Controllers\ReservationController;
 
 Route::get('/reservation-pdf/{trip}/{user}', [ReservationController::class, 'pdf'])->name('reservation.pdf');
+
+
+Route::middleware(['auth'])->group(function () {
+
+ Route::post('/send-message', [TripController::class, 'sendMessage'])->name('sendMessage');
+    
+    // Responder mensaje (conductor -> pasajero)
+    Route::post('/reply-message', [TripController::class, 'replyMessage'])->name('replyMessage');
+    
+    // Obtener mensajes de un viaje específico (para conductor)
+    Route::get('/trip/{tripId}/messages', [TripController::class, 'getTripMessages'])->name('getTripMessages');
+    
+    // Contar mensajes no leídos (para conductor)
+    Route::get('/unread-messages-count', [TripController::class, 'getUnreadMessagesCount'])->name('getUnreadMessagesCount');
+    
+    // API: Obtener mensajes del usuario (AJAX - para pasajero)
+    Route::get('/api/my-messages', [TripController::class, 'getMyMessages'])->name('getMyMessages');
+    
+    // Contar respuestas no leídas (para pasajero)
+    Route::get('/unread-responses-count', [TripController::class, 'getUnreadResponsesCount'])->name('getUnreadResponsesCount');
+    
+    // VISTA: Mostrar página de "Mis Mensajes" (para pasajero)
+    Route::get('/my-messages', function() {
+        return view('my-messages');
+    })->name('myMessagesView');
+});

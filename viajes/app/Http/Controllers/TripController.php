@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\TripMessage;
 
 class TripController extends Controller
 {
@@ -122,7 +123,7 @@ class TripController extends Controller
     public function history(){
         $sessionUserId = Auth()->user()->id;
 
-        $trips = Trip::with(['departureCity','arrivalCity','driver'])
+        $trips = Trip::with(['departureCity','arrivalCity','driver','messages.user'])
             ->orWhere('driver_id', $sessionUserId)
             ->orderBy('id', 'desc')
             ->limit(10)
@@ -138,7 +139,7 @@ class TripController extends Controller
 
         $tripIds = $reservations->pluck('trip_id')->unique()->toArray();
 
-        $trips2 = Trip::with(['departureCity','arrivalCity','driver'])
+        $trips2 = Trip::with(['departureCity','arrivalCity','driver','messages.user'])
             ->whereIn('id', $tripIds)
             ->orderBy('id', 'desc')
             ->limit(10)
@@ -244,5 +245,186 @@ class TripController extends Controller
 
    
     }
+
+
+    /**
+ * Enviar mensaje a un conductor
+ */
+public function sendMessage(Request $request)
+{
+    try {
+        $request->validate([
+            'trip_id' => 'required|exists:trips,id',
+            'message' => 'required|string|max:1000'
+        ]);
+
+        $trip = Trip::findOrFail($request->trip_id);
+        
+        if ($trip->user_id == auth()->id()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'No puedes enviarte mensajes a ti mismo'
+            ]);
+        }
+
+        $message = TripMessage::create([
+            'trip_id' => $request->trip_id,
+            'user_id' => auth()->id(),
+            'message' => $request->message,
+            'is_read' => false
+        ]);
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Mensaje enviado correctamente',
+            'data' => $message
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => true,
+            'message' => 'Error al enviar el mensaje: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Obtener mensajes de un viaje
+ */
+public function getTripMessages($tripId)
+{
+    try {
+        $trip = Trip::findOrFail($tripId);
+        
+        if ($trip->user_id != auth()->id()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'No tienes permiso para ver estos mensajes'
+            ], 403);
+        }
+
+        $messages = TripMessage::with('user')
+            ->forTrip($tripId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        TripMessage::forTrip($tripId)
+            ->unread()
+            ->update(['is_read' => true]);
+
+        return response()->json([
+            'error' => false,
+            'messages' => $messages
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => true,
+            'message' => 'Error al obtener mensajes: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Contar mensajes no leídos
+ */
+public function getUnreadMessagesCount()
+{
+    $count = TripMessage::whereHas('trip', function($query) {
+        $query->where('user_id', auth()->id());
+    })
+    ->unread()
+    ->count();
+
+    return response()->json([
+        'error' => false,
+        'count' => $count
+    ]);
+}
+
+/**
+ * Responder un mensaje (para conductores)
+ */
+public function replyMessage(Request $request)
+{
+    try {
+        $request->validate([
+            'message_id' => 'required|exists:trip_messages,id',
+            'response' => 'required|string|max:1000'
+        ]);
+
+        $message = TripMessage::with('trip')->findOrFail($request->message_id);
+        
+        if ($message->trip->driver_id != auth()->id()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'No tienes permiso para responder este mensaje'
+            ], 403);
+        }
+
+        $message->update([
+            'response' => $request->response,
+            'response_date' => now(),
+            'response_read' => false
+        ]);
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Respuesta enviada correctamente',
+            'data' => $message
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => true,
+            'message' => 'Error al enviar la respuesta: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Obtener mensajes del usuario (como pasajero)
+ */
+public function getMyMessages()
+{
+    try {
+        $messages = TripMessage::with(['trip.departureCity', 'trip.arrivalCity', 'trip.driver'])
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        TripMessage::where('user_id', auth()->id())
+            ->whereNotNull('response')
+            ->where('response_read', false)
+            ->update(['response_read' => true]);
+
+        return response()->json([
+            'error' => false,
+            'messages' => $messages
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => true,
+            'message' => 'Error al obtener mensajes: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Contar respuestas no leídas (para pasajeros)
+ */
+public function getUnreadResponsesCount()
+{
+    $count = TripMessage::where('user_id', auth()->id())
+        ->whereNotNull('response')
+        ->where('response_read', false)
+        ->count();
+
+    return response()->json([
+        'error' => false,
+        'count' => $count
+    ]);
+}
 
 }

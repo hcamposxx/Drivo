@@ -9,6 +9,12 @@
     <nav class="navbar-menu" id="nav-links">
         <div class="navbar-end">
             @auth
+                    <a href="{{ route('myMessagesView') }}" class="navbar-item">
+                    <span class="icon">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <span>Mis Mensajes</span>
+                </a>
                 <a href="{{ route('offer-seats') }}" class="navbar-item">
                     <span class="icon"><i class="fa-solid fa-plus"></i></span> Publicar un viaje
                 </a>
@@ -26,7 +32,6 @@
             @if(Auth::user()->is_admin)
             <a href="{{ route('admin.dashboard') }}" class="navbar-item"><span class="icon"><i class="fas fa-user-shield"></i></span>Panel Admin</a>
             @endif
-            
             @else
                 <a href="{{ route('login') }}" class="navbar-item">
                     <span class="icon"><i class="fa-solid fa-plus"></i></span> Publicar un viaje

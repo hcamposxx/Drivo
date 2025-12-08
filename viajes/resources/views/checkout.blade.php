@@ -9,8 +9,8 @@
         </div>
 
         {{-- Título --}}
-        <h1 class="title has-text-centered mt-4">Confirmar Reserva</h1>
-        <p class="has-text-centered">Revisa los datos antes de confirmar.</p>
+        <h1 class="title has-text-centered mt-4 checkout-title">Confirmar Reserva</h1>
+        <p class="has-text-centered subtitle-text">Revisa los datos antes de confirmar.</p>
 
         <hr class="my-4">
 
@@ -88,13 +88,42 @@
     height: auto;
 }
 
+/* TÍTULO EN NEGRO */
+.checkout-title {
+    color: #000 !important; /* Negro puro */
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Texto mejorado para mejor contraste */
+.subtitle-text {
+    color: #555 !important; /* Gris más oscuro para mejor legibilidad */
+    font-size: 1rem;
+}
+
 .trip-info p {
     font-size: 1.1rem;
+    color: #333; /* Gris oscuro en lugar de gris claro */
+}
+
+.trip-info p strong {
+    color: #222; /* Negro más intenso para las etiquetas */
 }
 
 .card-input {
     background: #fafafa;
     border: 1px solid #ccc;
+    color: #333; /* Texto más oscuro dentro del input */
+}
+
+.card-input::placeholder {
+    color: #888; /* Placeholder gris medio */
+}
+
+.label {
+    color: #333 !important; /* Etiqueta del input más oscura */
+    font-weight: 600;
 }
 
 .confirm-btn {
@@ -104,10 +133,16 @@
     color: #000;
     padding: 12px;
     border-radius: 10px;
+    transition: opacity 0.3s ease;
 }
 
 .confirm-btn:hover {
     opacity: 0.9;
+}
+
+/* Estilo para los hr */
+hr.my-4 {
+    border-color: #ddd; /* Gris claro para las líneas divisorias */
 }
 </style>
 
