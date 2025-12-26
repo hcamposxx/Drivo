@@ -81,3 +81,11 @@ bashnpm run dev
 bashphp artisan serve
 ```
 La aplicación estará disponible en http://localhost:8000
+
+## ## 👥 Equipo de Desarrollo
+
+| Nombre | Rol | Responsabilidades |
+|--------|-----|-------------------|
+| Héctor Campos| Frontend Developer | UI/UX, Blade templates, CSS |
+| Sebastián Cisternas | Full Stack Developer | Backend, Base de datos, Blade templates |
+| Claudio Rivas | Project Manager | Coordinación, testing, documentación |
